@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="scroll-behavior:smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游泳培训班在线报名</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+  :root {
+    --primary: #0a7ec4;
+    --primary-light: #e0f2fe;
+    --primary-dark: #07598a;
+    --primary-gradient: linear-gradient(135deg, #0b87d4 0%, #2563eb 50%, #1d4ed8 100%);
+    --accent: #06b6d4;
+    --accent-light: #cffafe;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --gray-900: #0f172a;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --green: #10b981;
+    --green-bg: #ecfdf5;
+    --green-dark: #047857;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,.06), 0 2px 4px rgba(0,0,0,.04);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,.08), 0 4px 10px rgba(0,0,0,.04);
+    --shadow-xl: 0 20px 40px rgba(0,0,0,.1);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-xs: 6px;
+    --transition: .2s cubic-bezier(.4,0,.2,1);
+    --transition-slow: .35s cubic-bezier(.4,0,.2,1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    background: linear-gradient(160deg, #dbeafe 0%, #e0f2fe 35%, #f0f5ff 65%, #ede9fe 100%);
+    min-height: 100vh;
+    padding: 32px 16px;
+    color: var(--gray-800);
+  }
+
+  .container {
+    max-width: 840px;
+    margin: 0 auto;
+  }
+
+  /* ========== Wave decoration ========== */
+  .header-wave {
+    position: relative;
+    overflow: hidden;
+  }
+  .header-wave::before,
+  .header-wave::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 200%;
+    height: 28px;
+    background-repeat: repeat-x;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .header-wave::before {
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath fill='%23ffffff' fill-opacity='1' d='M0,20 C200,0 400,40 600,20 C800,0 1000,40 1200,20 L1200,40 L0,40 Z'/%3E%3C/svg%3E");
+    background-size: 600px 28px;
+    animation: waveMove 4s linear infinite;
+    opacity: .9;
+  }
+  .header-wave::after {
+    bottom: -4px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath fill='%23ffffff' fill-opacity='0.5' d='M0,25 C200,5 400,45 600,25 C800,5 1000,45 1200,25 L1200,40 L0,40 Z'/%3E%3C/svg%3E");
+    background-size: 600px 28px;
+    animation: waveMove 5s linear infinite reverse;
+    opacity: .6;
+  }
+  @keyframes waveMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Header */
+  .header {
+    position: relative;
+    text-align: center;
+    padding: 32px 24px 28px;
+    background: var(--primary-gradient);
+    border-radius: var(--radius) var(--radius) 0 0;
+    color: #fff;
+    overflow: hidden;
+  }
+  .header h1 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+  .header p {
+    font-size: 14px;
+    margin-top: 8px;
+    opacity: .9;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  .header .coach-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 8px 20px;
+    background: rgba(255,255,255,.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: var(--transition);
+  }
+  .header .coach-info:hover {
+    background: rgba(255,255,255,.22);
+  }
+  .header .coach-info .dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.5);
+  }
+
+  /* Form Card */
+  .form-card {
+    background: #fff;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 32px 36px 36px;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 28px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 32px;
+    animation: sectionIn .4s ease both;
+  }
+  .section:nth-child(1) { animation-delay: .05s; }
+  .section:nth-child(2) { animation-delay: .1s; }
+  .section:nth-child(3) { animation-delay: .15s; }
+  .section:nth-child(4) { animation-delay: .2s; }
+  .section:last-child { margin-bottom: 0; }
+
+  @keyframes sectionIn {
+    0% { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    padding: 10px 16px;
+    background: linear-gradient(135deg, var(--primary-light) 0%, #f0f7ff 100%);
+    border-radius: var(--radius-sm);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-left: 3px solid var(--primary);
+  }
+  .section-title .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(10, 126, 196, .3);
+  }
+
+  /* Field Group */
+  .field-group {
+    margin-bottom: 16px;
+    transition: var(--transition);
+  }
+  .field-group:last-child { margin-bottom: 0; }
+
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 5px;
+    letter-spacing: .3px;
+  }
+  .field-label .required {
+    color: var(--red);
+    margin-left: 2px;
+  }
+  .field-label .hint {
+    font-weight: 400;
+    color: var(--gray-400);
+    font-size: 12px;
+    margin-left: 6px;
+  }
+
+  /* Inputs */
+  input[type="text"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  select {
+    width: 100%;
+    padding: 11px 15px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--gray-800);
+    background: #fff;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    outline: none;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(10, 126, 196, .1), 0 1px 2px rgba(0,0,0,.04);
+    background: #fafeff;
+  }
+  input:hover:not(:focus):not(:disabled),
+  select:hover:not(:focus):not(:disabled) {
+    border-color: var(--gray-300);
+  }
+  input::placeholder { color: var(--gray-400); }
+  input[type="date"] { padding: 9px 14px; }
+
+  /* Inline row */
+  .inline-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .inline-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  .inline-row-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* Radio / Checkbox */
+  .option-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .option-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    transition: all var(--transition);
+    background: #fff;
+    user-select: none;
+    position: relative;
+  }
+  .option-item:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+  .option-item:active {
+    transform: translateY(0);
+  }
+  .option-item input {
+    display: none;
+  }
+  .option-item.active {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, var(--primary-light) 0%, #f0f7ff 100%);
+    color: var(--primary-dark);
+    box-shadow: 0 1px 3px rgba(10, 126, 196, .08);
+  }
+  .option-item input[type="radio"]:checked + .option-marker,
+  .option-item input[type="checkbox"]:checked + .option-marker {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    transform: scale(1.05);
+  }
+  .option-marker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gray-300);
+    font-size: 11px;
+    flex-shrink: 0;
+    transition: all var(--transition);
+  }
+  .option-item input[type="checkbox"] ~ .option-marker {
+    border-radius: 4px;
+  }
+  .option-item.active .option-marker {
+    border-color: var(--primary);
+  }
+
+  /* Inline input after option */
+  .option-with-input {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .option-with-input input {
+    width: 100px;
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: var(--radius-xs);
+  }
+  .option-with-input input:focus {
+    box-shadow: 0 0 0 2px rgba(10, 126, 196, .1);
+  }
+
+  /* Course grid */
+  .course-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .course-grid .option-item {
+    padding: 12px 16px;
+    justify-content: space-between;
+    border-radius: var(--radius-sm);
+  }
+  .course-grid .option-item .price {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 13px;
+    background: var(--primary-light);
+    padding: 2px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+  }
+  .course-grid .option-item.active .price {
+    background: rgba(255,255,255,.6);
+  }
+
+  /* Notice */
+  .notice-box {
+    background: linear-gradient(135deg, #fafcff 0%, var(--gray-50) 100%);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .notice-box::before {
+    content: "\26A0";
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    font-size: 22px;
+    opacity: .12;
+  }
+  .notice-box p {
+    font-size: 13px;
+    color: var(--gray-600);
+    line-height: 2;
+    padding-left: 2px;
+  }
+  .notice-box p::before {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--primary);
+    margin-right: 10px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+  .notice-header {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .notice-header::before {
+    content: "\1F4CB";
+    font-size: 14px;
+  }
+
+  /* Signature */
+  .signature-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* Submit */
+  .submit-area {
+    text-align: center;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--gray-200);
+  }
+  .btn-submit {
+    width: 100%;
+    max-width: 380px;
+    padding: 16px 28px;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--primary-gradient);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition);
+    font-family: inherit;
+    letter-spacing: 3px;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-submit::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,.1) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform .6s;
+  }
+  .btn-submit:hover::before {
+    transform: translateX(100%);
+  }
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  .btn-submit.loading {
+    pointer-events: none;
+  }
+
+  .submit-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--gray-400);
+  }
+
+  /* Success message */
+  .success-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .success-overlay.show { display: flex; }
+  .success-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 44px 40px 36px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: 0 25px 50px rgba(0,0,0,.15);
+  }
+  @keyframes popIn {
+    0% { transform: scale(.85) translateY(10px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+  }
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, var(--green-bg) 0%, #d1fae5 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, .15);
+  }
+  .success-icon svg { width: 36px; height: 36px; stroke: var(--green); stroke-width: 3; }
+  .success-box h2 {
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--gray-800);
+  }
+  .success-box p {
+    font-size: 14px;
+    color: var(--gray-500);
+    line-height: 1.7;
+  }
+  .btn-close-success {
+    margin-top: 24px;
+    padding: 11px 44px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--primary-gradient);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-close-success:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Loading */
+  .btn-submit .spinner {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid rgba(255,255,255,.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+    margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .btn-submit.loading .btn-text { display: none; }
+  .btn-submit.loading .spinner { display: block; }
+
+  /* Error state */
+  .field-error input,
+  .field-error select {
+    border-color: var(--red) !important;
+    background: #fefcfc;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, .08);
+  }
+  .field-error .option-item {
+    border-color: var(--red);
+  }
+  .error-msg {
+    display: none;
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 4px;
+    padding-left: 2px;
+    font-weight: 500;
+  }
+  .field-error .error-msg { display: block; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--gray-800);
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    transition: all .35s cubic-bezier(.4,0,.2,1);
+    z-index: 999;
+    pointer-events: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--gray-400);
+    padding: 12px 0 4px;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    body { padding: 12px 10px; }
+    .header { padding: 24px 18px 22px; }
+    .header h1 { font-size: 20px; }
+    .header .coach-info { font-size: 12px; padding: 6px 14px; }
+    .form-card { padding: 22px 18px 28px; }
+    .inline-row, .inline-row-3, .inline-row-4 {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .course-grid { grid-template-columns: 1fr; }
+    .course-grid .option-item[style*="span 2"] {
+      grid-column: span 1 !important;
+    }
+    .signature-area { grid-template-columns: 1fr; }
+    .section-title { font-size: 14px; }
+    .success-box { padding: 36px 24px 28px; }
+  }
+
+  @media (max-width: 400px) {
+    .option-item { font-size: 12px; padding: 7px 12px; }
+    .course-grid .option-item { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header header-wave">
+    <h1>🏊 游泳培训班报名</h1>
+    <p>填写信息提交后，教练将尽快与您联系确认</p>
+    <div class="coach-info">
+      <span>🏊 邵教练</span>
+      <span class="dot"></span>
+      <span>15906636758 / 13221058058</span>
+      <span class="dot"></span>
+      <span>微信同号</span>
+    </div>
+
+    <div style="max-width:840px; margin:-4px auto 0; padding:0; position:relative; z-index:1;">
+      <div style="background:#fff; border-radius:0 0 var(--radius) var(--radius); padding:10px 36px 18px; box-shadow:var(--shadow-lg);">
+        <div class="section" style="margin-bottom:0;">
+          <div class="section-title" style="margin-bottom:12px;"><span class="num">★</span> 选择报名期次</div>
+          <div class="field-group" style="margin-bottom:0;">
+            <label class="field-label">请选择期次 <span class="required">*</span></label>
+            <div class="option-group">
+              <label class="option-item">
+                <input type="radio" name="period" value="第一期">
+                <span class="option-marker">✓</span> 第一期
+              </label>
+              <label class="option-item">
+                <input type="radio" name="period" value="第二期">
+                <span class="option-marker">✓</span> 第二期
+              </label>
+              <label class="option-item">
+                <input type="radio" name="period" value="第三期">
+                <span class="option-marker">✓</span> 第三期
+              </label>
+              <label class="option-item option-with-input">
+                <input type="radio" name="period" value="其他">
+                <span class="option-marker">✓</span> 其他：
+                <input type="text" name="period_other" placeholder="期次名称" style="width:110px;padding:5px 8px;font-size:13px;border:1.5px solid var(--gray-200);border-radius:var(--radius-xs);outline:none;">
+              </label>
+            </div>
+            <div class="error-msg">请选择报名期次</div>
+          </div>
+        </div>
+      </div>
+    </div>  </div>
+
+  <!-- Form -->
+  <form class="form-card" id="regForm" novalidate>
+
+    <!-- ============ 一、学员基础信息 ============ -->
+    <div class="section">
+      <div class="section-title"><span class="num">1</span> 学员基础信息</div>
+
+      <div class="field-group">
+        <div class="inline-row">
+          <div>
+            <label class="field-label">学员姓名 <span class="required">*</span></label>
+            <input type="text" name="name" placeholder="请输入学员姓名" required>
+            <div class="error-msg">请填写学员姓名</div>
+          </div>
+          <div>
+            <label class="field-label">性别 <span class="required">*</span></label>
+            <div class="option-group">
+              <label class="option-item">
+                <input type="radio" name="gender" value="男">
+                <span class="option-marker">✓</span> 男
+              </label>
+              <label class="option-item">
+                <input type="radio" name="gender" value="女">
+                <span class="option-marker">✓</span> 女
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="inline-row-3">
+          <div>
+            <label class="field-label">年龄</label>
+            <input type="number" name="age" placeholder="岁" min="3" max="80">
+          </div>
+          <div>
+            <label class="field-label">身高 (cm)</label>
+            <input type="number" name="height" placeholder="cm" min="60" max="220">
+          </div>
+          <div>
+            <label class="field-label">体重 (kg)</label>
+            <input type="number" name="weight" placeholder="kg" min="10" max="200">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">身份证号 <span class="hint">选填，购买保险用</span></label>
+        <input type="text" name="id_number" placeholder="18 位身份证号">
+      </div>
+
+      <div class="field-group">
+        <div class="inline-row">
+          <div>
+            <label class="field-label">家长联系人 <span class="required">*</span></label>
+            <input type="text" name="parent_contact" placeholder="家长姓名" required>
+            <div class="error-msg">请填写家长联系人</div>
+          </div>
+          <div>
+            <label class="field-label">联系电话 <span class="required">*</span></label>
+            <input type="tel" name="phone" placeholder="手机号码" required>
+            <div class="error-msg">请填写联系电话</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">紧急联系人及电话</label>
+        <input type="text" name="emergency_contact" placeholder="姓名 + 电话">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">有无过敏史、心脏病、皮肤病、哮喘、中耳炎等不适宜游泳疾病 <span class="required">*</span></label>
+        <div class="option-group">
+          <label class="option-item">
+            <input type="radio" name="disease" value="无">
+            <span class="option-marker">✓</span> 无
+          </label>
+          <label class="option-item option-with-input">
+            <input type="radio" name="disease" value="有">
+            <span class="option-marker">✓</span> 有，注明：
+            <input type="text" name="disease_note" placeholder="具体情况" style="width:140px">
+          </label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">游泳基础 <span class="required">*</span></label>
+        <div class="option-group">
+          <label class="option-item">
+            <input type="radio" name="swim_level" value="零基础">
+            <span class="option-marker">✓</span> 零基础
+          </label>
+          <label class="option-item option-with-input">
+            <input type="radio" name="swim_level" value="有基础">
+            <span class="option-marker">✓</span> 有基础，会
+            <input type="text" name="swim_style" placeholder="泳姿" style="width:90px">
+            泳姿
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 二、课程选择 ============ -->
+    <div class="section">
+      <div class="section-title"><span class="num">2</span> 课程选择</div>
+
+      <div style="font-size:13px; color:var(--gray-500); margin-bottom:12px;">
+        一期 10 节课，每节 1 小时；包教会班次正常出勤未学会，可免费续学 1-2 节课
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">选择课程 <span class="required">*</span></label>
+        <div class="course-grid">
+          <label class="option-item">
+            <input type="checkbox" name="course" value="蛙泳一对三">
+            <span class="option-marker">✓</span> 蛙泳一对三
+            <span class="price">1380 元</span>
+          </label>
+          <label class="option-item">
+            <input type="checkbox" name="course" value="自由泳一对四">
+            <span class="option-marker">✓</span> 自由泳一对四
+            <span class="price">1280 元</span>
+          </label>
+          <label class="option-item">
+            <input type="checkbox" name="course" value="仰泳一对五">
+            <span class="option-marker">✓</span> 仰泳一对五
+            <span class="price">1080 元</span>
+          </label>
+          <label class="option-item">
+            <input type="checkbox" name="course" value="蝶泳一对五">
+            <span class="option-marker">✓</span> 蝶泳一对五
+            <span class="price">1080 元</span>
+          </label>
+          <label class="option-item" style="grid-column:span 2">
+            <input type="checkbox" name="course" value="中考班二对多">
+            <span class="option-marker">✓</span> 中考班二对多 &nbsp;
+            <span class="price">2380 元 / 期（30 天，达标中考标准）</span>
+          </label>
+          <label class="option-item">
+            <input type="checkbox" name="course" value="成人班一对三">
+            <span class="option-marker">✓</span> 成人班一对三
+            <span class="price">1580 元</span>
+          </label>
+          <label class="option-item">
+            <input type="checkbox" name="course" value="长训班">
+            <span class="option-marker">✓</span> 长训班
+            <span class="price">2880 元 / 约 40 节</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">意向上课时段（可多选）</label>
+        <div style="margin-bottom:4px; font-size:12.5px; font-weight:600; color:var(--gray-500);">上午</div>
+        <div class="option-group" style="margin-bottom:10px;">
+          <label class="option-item"><input type="checkbox" name="time_slot" value="8:00-9:00"><span class="option-marker">✓</span> 8:00-9:00</label>
+          <label class="option-item"><input type="checkbox" name="time_slot" value="9:00-10:00"><span class="option-marker">✓</span> 9:00-10:00</label>
+          <label class="option-item"><input type="checkbox" name="time_slot" value="10:00-11:00"><span class="option-marker">✓</span> 10:00-11:00</label>
+        </div>
+        <div style="margin-bottom:4px; font-size:12.5px; font-weight:600; color:var(--gray-500);">下午 / 晚间</div>
+        <div class="option-group">
+          <label class="option-item"><input type="checkbox" name="time_slot" value="15:00-16:00"><span class="option-marker">✓</span> 15:00-16:00</label>
+          <label class="option-item"><input type="checkbox" name="time_slot" value="16:00-17:00"><span class="option-marker">✓</span> 16:00-17:00</label>
+          <label class="option-item"><input type="checkbox" name="time_slot" value="18:00-19:00"><span class="option-marker">✓</span> 18:00-19:00</label>
+          <label class="option-item"><input type="checkbox" name="time_slot" value="19:00-20:00"><span class="option-marker">✓</span> 19:00-20:00</label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">上课场地 <span class="required">*</span></label>
+        <div class="option-group">
+          <label class="option-item">
+            <input type="radio" name="venue" value="场地一">
+            <span class="option-marker">✓</span> 场地一：淳安县千岛湖镇绿城锦玉园泳池
+          </label>
+          <label class="option-item">
+            <input type="radio" name="venue" value="场地二">
+            <span class="option-marker">✓</span> 场地二：淳安县千岛湖镇梦姑路 488 号（梅地亚君澜室内泳池）
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 三、缴费 & 优惠信息 ============ -->
+    <div class="section">
+      <div class="section-title"><span class="num">3</span> 缴费 &amp; 优惠信息</div>
+
+      <div class="field-group">
+        <div class="inline-row">
+          <div>
+            <label class="field-label">报名类型 <span class="required">*</span></label>
+            <div class="option-group">
+              <label class="option-item">
+                <input type="radio" name="reg_type" value="单人报名">
+                <span class="option-marker">✓</span> 单人报名
+              </label>
+              <label class="option-item option-with-input">
+                <input type="radio" name="reg_type" value="组团报名">
+                <span class="option-marker">✓</span> 组团报名，共
+                <input type="number" name="group_size" placeholder="人数" style="width:60px">
+                人
+              </label>
+            </div>
+          </div>
+          <div>
+            <label class="field-label">转介绍优惠</label>
+            <div class="option-group">
+              <label class="option-item">
+                <input type="radio" name="referral" value="是">
+                <span class="option-marker">✓</span> 是
+              </label>
+              <label class="option-item">
+                <input type="radio" name="referral" value="否">
+                <span class="option-marker">✓</span> 否
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">抵扣代金券</label>
+        <div class="option-with-input">
+          <input type="number" name="voucher" placeholder="金额" style="width:110px">
+          <span style="font-size:13px; color:var(--gray-500);">元（100 元 / 人，可叠加）</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="inline-row-3">
+          <div>
+            <label class="field-label">课程原价</label>
+            <input type="number" name="original_price" placeholder="元">
+          </div>
+          <div>
+            <label class="field-label">优惠抵扣</label>
+            <input type="number" name="discount" placeholder="元">
+          </div>
+          <div>
+            <label class="field-label">实缴金额</label>
+            <input type="number" name="final_price" placeholder="元">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="inline-row">
+          <div>
+            <label class="field-label">缴费方式</label>
+            <div class="option-group">
+              <label class="option-item"><input type="radio" name="payment_method" value="微信"><span class="option-marker">✓</span> 微信</label>
+              <label class="option-item"><input type="radio" name="payment_method" value="支付宝"><span class="option-marker">✓</span> 支付宝</label>
+              <label class="option-item"><input type="radio" name="payment_method" value="现金"><span class="option-marker">✓</span> 现金</label>
+            </div>
+          </div>
+          <div>
+            <label class="field-label">缴费日期</label>
+            <input type="date" name="payment_date">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 四、报名须知 ============ -->
+    <div class="section">
+      <div class="section-title"><span class="num">4</span> 报名须知</div>
+
+      <div class="notice-box">
+        <div class="notice-header">请认真阅读以下条款，提交即代表已知悉并同意遵守</div>
+        <p>学员按时上课，迟到不延时补课；请假务必提前告知教练。</p>
+        <p>患有皮肤病、心脏病、传染病、中耳炎等疾病禁止参训。</p>
+        <p>自备泳衣、泳帽、泳镜、拖鞋，服从教练与泳池管理规定。</p>
+        <p>妥善保管个人物品，贵重物品不要带入泳池区域。</p>
+      </div>
+
+      <div class="field-group" style="margin-top:14px;">
+        <label class="option-item" style="border-color:var(--green);">
+          <input type="checkbox" name="agree" value="同意" required>
+          <span class="option-marker">✓</span>
+          <span style="font-size:13px;">我已阅读并同意以上报名须知 <span class="required">*</span></span>
+        </label>
+      </div>
+
+      <div class="field-group" style="margin-top:12px;">
+        <div class="signature-area">
+          <div>
+            <label class="field-label">学员 / 家长签字 <span class="required">*</span></label>
+            <input type="text" name="signature" placeholder="请手写输入姓名" required>
+            <div class="error-msg">请签字确认</div>
+          </div>
+          <div>
+            <label class="field-label">填表日期</label>
+            <input type="date" name="fill_date">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-area">
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span class="btn-text">提 交 报 名</span>
+        <span class="spinner"></span>
+      </button>
+      <div class="submit-note">提交后我们会尽快与您联系确认名额</div>
+    </div>
+
+  </form>
+
+  <div class="footer">© 游泳培训班 · 邵教练</div>
+</div>
+
+<!-- Success overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-box">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <h2>报名提交成功！</h2>
+    <p>感谢您的报名！邵教练将会尽快通过电话或微信与您联系，确认上课时间和名额。</p>
+    <p style="margin-top:8px; font-size:13px; color:var(--gray-400);">如有疑问可直接致电：15906636758</p>
+    <button class="btn-close-success" onclick="closeSuccess()">知道了</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== Interactive options ==========
+document.querySelectorAll('.option-item').forEach(item => {
+  const input = item.querySelector('input');
+  if (!input) return;
+
+  const update = () => {
+    if (input.type === 'radio') {
+      const name = input.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        r.closest('.option-item')?.classList.remove('active');
+      });
+      if (input.checked) item.classList.add('active');
+    } else if (input.type === 'checkbox') {
+      item.classList.toggle('active', input.checked);
+    }
+  };
+
+  input.addEventListener('change', update);
+  item.addEventListener('click', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.closest('input')) return;
+    if (item.classList.contains('option-with-input') && e.target.closest('input')) return;
+    input.checked = !input.checked;
+    update();
+  });
+
+  // Init
+  if (input.checked) item.classList.add('active');
+});
+
+// Init date fields
+document.querySelector('input[name="fill_date"]').valueAsDate = new Date();
+
+// ========== Toast ==========
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ========== Form submission ==========
+const STORAGE_KEY = 'swim_registrations';
+const ENDPOINT_KEY = 'swim_form_endpoint';
+
+function getFormData() {
+  const fd = new FormData(document.getElementById('regForm'));
+
+  // Collect checkboxes
+  const courses = [];
+  document.querySelectorAll('input[name="course"]:checked').forEach(c => courses.push(c.value));
+  const timeSlots = [];
+  document.querySelectorAll('input[name="time_slot"]:checked').forEach(c => timeSlots.push(c.value));
+
+  const data = {
+    period: document.querySelector('input[name="period"]:checked')?.value || "",
+    period_other: fd.get("period_other") || "",
+    name: fd.get('name') || '',
+    gender: fd.get('gender') || '',
+    age: fd.get('age') || '',
+    height: fd.get('height') || '',
+    weight: fd.get('weight') || '',
+    id_number: fd.get('id_number') || '',
+    parent_contact: fd.get('parent_contact') || '',
+    phone: fd.get('phone') || '',
+    emergency_contact: fd.get('emergency_contact') || '',
+    disease: fd.get('disease') || '',
+    disease_note: fd.get('disease_note') || '',
+    swim_level: fd.get('swim_level') || '',
+    swim_style: fd.get('swim_style') || '',
+    courses: courses,
+    time_slots: timeSlots,
+    venue: fd.get('venue') || '',
+    reg_type: fd.get('reg_type') || '',
+    group_size: fd.get('group_size') || '',
+    referral: fd.get('referral') || '',
+    voucher: fd.get('voucher') || '',
+    original_price: fd.get('original_price') || '',
+    discount: fd.get('discount') || '',
+    final_price: fd.get('final_price') || '',
+    payment_method: fd.get('payment_method') || '',
+    payment_date: fd.get('payment_date') || '',
+    signature: fd.get('signature') || '',
+    fill_date: fd.get('fill_date') || '',
+    submitted_at: new Date().toISOString()
+  };
+  return data;
+}
+
+function validateForm(data) {
+  const errors = [];
+  if (!data.name) errors.push('name');
+  if (!document.querySelector('input[name="period"]:checked')) errors.push('period');
+  if (!data.phone) errors.push('phone');
+  if (!data.parent_contact) errors.push('parent_contact');
+  if (!data.gender) errors.push('gender');
+  if (!data.disease) errors.push('disease');
+  if (!data.swim_level) errors.push('swim_level');
+  if (data.courses.length === 0) errors.push('course');
+  if (!data.venue) errors.push('venue');
+  if (!data.reg_type) errors.push('reg_type');
+  if (!data.signature) errors.push('signature');
+  if (!document.querySelector('input[name="agree"]:checked')) errors.push('agree');
+
+  // Clear previous errors
+  document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+
+  if (errors.length > 0) {
+    errors.forEach(key => {
+      const field = document.querySelector(`[name="${key}"]`);
+      if (field) {
+        const group = field.closest('.field-group') || field.closest('.option-group')?.closest('.field-group');
+        if (group) group.classList.add('field-error');
+        else if (field.closest('.option-item')) {
+          const parent = field.closest('.option-item').closest('.field-group');
+          if (parent) parent.classList.add('field-error');
+        }
+      }
+    });
+    showToast('请填写所有必填项（带 * 标记）');
+    return false;
+  }
+  return true;
+}
+
+function saveToLocal(data) {
+  try {
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    stored.push(data);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+  } catch(e) { /* ignore */ }
+}
+
+async function submitToEndpoint(data) {
+  const endpoint = localStorage.getItem(ENDPOINT_KEY);
+  if (!endpoint) return false;
+  try {
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return resp.ok;
+  } catch {
+    return false;
+  }
+}
+
+document.getElementById('regForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const data = getFormData();
+
+  if (!validateForm(data)) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+
+  // Save locally
+  saveToLocal(data);
+
+  // Try to send to endpoint
+  const sent = await submitToEndpoint(data);
+
+  btn.classList.remove('loading');
+  btn.disabled = false;
+
+  // Show success
+  document.getElementById('successOverlay').classList.add('show');
+});
+
+function closeSuccess() {
+  document.getElementById('successOverlay').classList.remove('show');
+  document.querySelectorAll("input[name=period]").forEach(r => r.checked = false);
+  document.querySelectorAll("input[name=period_other]").forEach(r => r.value = "");
+  document.getElementById('regForm').reset();
+  document.querySelectorAll('.option-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  document.querySelector('input[name="fill_date"]').valueAsDate = new Date();
+  document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+}
+</script>
+
+</body>
+</html>
