@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>报名数据管理</title>
+<style>
+  :root {
+    --primary: #1a7bc4;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --red: #ef4444;
+    --green: #22c55e;
+    --shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--gray-100);
+    padding: 24px 16px;
+    color: var(--gray-800);
+  }
+  .container { max-width: 1000px; margin: 0 auto; }
+
+  .header {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header h1 { font-size: 18px; }
+  .header .stats { font-size: 13px; color: var(--gray-600); }
+
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .15s;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { opacity: .9; }
+  .btn-outline {
+    background: #fff;
+    border: 1.5px solid var(--gray-200);
+    color: var(--gray-700);
+  }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-danger:hover { opacity: .9; }
+
+  /* Login */
+  .login-box {
+    max-width: 360px;
+    margin: 80px auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 32px 28px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.1);
+    text-align: center;
+  }
+  .login-box h2 { font-size: 18px; margin-bottom: 16px; }
+  .login-box input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  .login-box input:focus { border-color: var(--primary); outline: none; }
+
+  /* Cards */
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--gray-200);
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  /* Setup panel */
+  .setup-panel {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .setup-panel h3 { font-size: 14px; margin-bottom: 10px; }
+  .setup-panel .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 6px; }
+  .setup-panel input { flex: 1; min-width: 200px; padding: 8px 12px; border: 1.5px solid var(--gray-200); border-radius: 6px; font-size: 13px; }
+  .setup-panel input:focus { border-color: var(--primary); outline: none; }
+  .setup-panel .hint { font-size: 12px; color: var(--gray-400); margin-top: 6px; line-height: 1.6; }
+  .setup-panel code { background: var(--gray-100); padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: var(--gray-100); text-align: left; padding: 10px 12px; font-weight: 600; white-space: nowrap; border-bottom: 2px solid var(--gray-200); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  tr:hover td { background: #f8fafc; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+
+  .empty { text-align: center; padding: 48px 24px; color: var(--gray-400); }
+  .empty p { margin-top: 8px; }
+
+  .detail-toggle { color: var(--primary); cursor: pointer; font-size: 12px; }
+  .detail-toggle:hover { text-decoration: underline; }
+  .detail-row { display: none; }
+  .detail-row.show { display: table-row; }
+  .detail-cell { padding: 12px 16px !important; background: #fafbfc; }
+  .detail-grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; font-size: 12.5px; }
+  .detail-grid dt { color: var(--gray-600); font-weight: 600; white-space: nowrap; }
+  .detail-grid dd { color: var(--gray-800); }
+
+  @media (max-width: 600px) {
+    .header { flex-direction: column; align-items: stretch; }
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Login -->
+  <div class="login-box" id="loginBox">
+    <h2>🔐 报名数据管理</h2>
+    <p style="font-size:13px; color:var(--gray-600); margin-bottom:12px;">请输入管理密码</p>
+    <input type="password" id="pwdInput" placeholder="默认密码：admin123" onkeydown="if(event.key==='Enter') login()">
+    <button class="btn btn-primary" onclick="login()" style="width:100%;">进入管理后台</button>
+  </div>
+
+  <!-- Admin panel -->
+  <div class="container" id="adminPanel" style="display:none;">
+
+    <div class="header">
+      <div>
+        <h1>📋 报名数据管理</h1>
+        <div class="stats" id="statsBar">正在加载…</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" onclick="exportCSV()">📥 导出 CSV</button>
+        <button class="btn btn-outline" onclick="exportJSON()">📄 导出 JSON</button>
+        <button class="btn btn-outline" onclick="refreshData()">🔄 刷新</button>
+        <button class="btn btn-danger" onclick="clearData()">🗑️ 清空</button>
+        <button class="btn btn-outline" onclick="logout()">退出</button>
+      </div>
+    </div>
+
+    <div class="setup-panel">
+      <h3>⚙️ 数据收集设置</h3>
+      <div class="row">
+        <input type="url" id="endpointInput" placeholder="https://script.google.com/macros/s/xxx/exec">
+        <button class="btn btn-primary" onclick="saveEndpoint()">保存</button>
+        <button class="btn btn-outline" onclick="showHelp()">📖 查看教程</button>
+      </div>
+      <div class="hint" id="endpointStatus">当前未设置远程端点，数据仅保存在本地浏览器中。设置后可实时收集到 Google 表格。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">报名记录</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>提交时间</th>
+              <th>学员姓名</th>
+              <th>性别</th>
+              <th>年龄</th>
+              <th>联系电话</th>
+              <th>课程</th>
+              <th>场地</th>
+              <th>金额</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="dataBody"></tbody>
+        </table>
+        <div class="empty" id="emptyState">
+          <div style="font-size:40px;">📭</div>
+          <p>暂无报名数据</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'swim_registrations';
+const ENDPOINT_KEY = 'swim_form_endpoint';
+const PWD_KEY = 'swim_admin_pwd';
+
+const DEFAULT_PWD = 'admin123';
+
+function setCookie(name, value, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + days * 86400000);
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/`;
+}
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function saveEndpoint() {
+  const url = document.getElementById('endpointInput').value.trim();
+  if (url) {
+    localStorage.setItem(ENDPOINT_KEY, url);
+    document.getElementById('endpointStatus').textContent = '✅ 远程端点已设置，新提交的数据将同步发送到此地址。';
+  } else {
+    localStorage.removeItem(ENDPOINT_KEY);
+    document.getElementById('endpointStatus').textContent = '⚠️ 已清除端点，数据仅保存在本地浏览器中。';
+  }
+}
+
+function loadEndpoint() {
+  const url = localStorage.getItem(ENDPOINT_KEY);
+  if (url) {
+    document.getElementById('endpointInput').value = url;
+    document.getElementById('endpointStatus').textContent = '✅ 远程端点已设置。';
+  }
+}
+
+function login() {
+  const pwd = document.getElementById('pwdInput').value || DEFAULT_PWD;
+  const stored = localStorage.getItem(PWD_KEY);
+  if (pwd === (stored || DEFAULT_PWD)) {
+    setCookie('swim_admin', '1', 7);
+    showAdmin();
+  } else {
+    alert('密码错误！默认密码：admin123（可在设置中修改）');
+  }
+}
+
+function logout() {
+  setCookie('swim_admin', '', -1);
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('loginBox').style.display = 'block';
+}
+
+function showAdmin() {
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  loadEndpoint();
+  refreshData();
+}
+
+function getData() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  } catch { return []; }
+}
+
+function renderData(data) {
+  const tbody = document.getElementById('dataBody');
+  const empty = document.getElementById('emptyState');
+
+  tbody.innerHTML = '';
+  if (data.length === 0) {
+    empty.style.display = 'block';
+    document.getElementById('statsBar').textContent = '共 0 条报名记录';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const reversed = [...data].reverse();
+  document.getElementById('statsBar').textContent = `共 ${data.length} 条报名记录`;
+
+  reversed.forEach((item, idx) => {
+    const realIdx = data.length - idx;
+    const courses = Array.isArray(item.courses) ? item.courses.join('、') : (item.courses || '');
+    const time = item.submitted_at ? new Date(item.submitted_at).toLocaleString('zh-CN') : '-';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--gray-400);">${realIdx}</td>
+      <td style="white-space:nowrap;">${time}</td>
+      <td><strong>${item.name || '-'}</strong></td>
+      <td>${item.gender || '-'}</td>
+      <td>${item.age || '-'}</td>
+      <td>${item.phone || '-'}</td>
+      <td style="max-width:160px;">${courses || '-'}</td>
+      <td>${item.venue || '-'}</td>
+      <td>${item.final_price ? item.final_price + '元' : '-'}</td>
+      <td><span class="detail-toggle" onclick="toggleDetail(this, ${realIdx})">展开</span></td>
+    `;
+    tbody.appendChild(tr);
+
+    // Detail row
+    const detailTr = document.createElement('tr');
+    detailTr.className = 'detail-row';
+    detailTr.id = `detail-${realIdx}`;
+    const detailTd = document.createElement('td');
+    detailTd.colSpan = 10;
+    detailTd.className = 'detail-cell';
+    detailTd.innerHTML = `
+      <dl class="detail-grid">
+        <dt>学员姓名</dt><dd>${item.name || '-'}</dd>
+        <dt>报名期次</dt><dd>${item.period || '-'}</dd>
+        <dt>性别</dt><dd>${item.gender || '-'}</dd>
+        <dt>年龄/身高/体重</dt><dd>${item.age || '-'}岁 / ${item.height || '-'}cm / ${item.weight || '-'}kg</dd>
+        <dt>身份证号</dt><dd>${item.id_number || '-'}</dd>
+        <dt>家长联系人</dt><dd>${item.parent_contact || '-'}</dd>
+        <dt>联系电话</dt><dd>${item.phone || '-'}</dd>
+        <dt>紧急联系人</dt><dd>${item.emergency_contact || '-'}</dd>
+        <dt>疾病史</dt><dd>${item.disease || '-'}${item.disease_note ? '（' + item.disease_note + '）' : ''}</dd>
+        <dt>游泳基础</dt><dd>${item.swim_level || '-'}${item.swim_style ? '（' + item.swim_style + '）' : ''}</dd>
+        <dt>选择课程</dt><dd>${courses || '-'}</dd>
+        <dt>意向上课时段</dt><dd>${Array.isArray(item.time_slots) ? item.time_slots.join('、') : (item.time_slots || '-')}</dd>
+        <dt>上课场地</dt><dd>${item.venue || '-'}</dd>
+        <dt>报名类型</dt><dd>${item.reg_type || '-'}${item.group_size ? '（' + item.group_size + '人）' : ''}</dd>
+        <dt>转介绍优惠</dt><dd>${item.referral || '-'}</dd>
+        <dt>代金券</dt><dd>${item.voucher || '0'}元</dd>
+        <dt>课程原价→实缴</dt><dd>${item.original_price || '-'}元 → ${item.final_price || '-'}元${item.discount ? '（抵扣' + item.discount + '元）' : ''}</dd>
+        <dt>缴费方式</dt><dd>${item.payment_method || '-'}${item.payment_date ? '（' + item.payment_date + '）' : ''}</dd>
+        <dt>签字</dt><dd>${item.signature || '-'}</dd>
+        <dt>填表日期</dt><dd>${item.fill_date || '-'}</dd>
+      </dl>
+    `;
+    detailTr.appendChild(detailTd);
+    tbody.appendChild(detailTr);
+  });
+}
+
+function toggleDetail(el, idx) {
+  const row = document.getElementById(`detail-${idx}`);
+  if (row) {
+    row.classList.toggle('show');
+    el.textContent = row.classList.contains('show') ? '收起' : '展开';
+  }
+}
+
+let lastData = [];
+
+function refreshData() {
+  lastData = getData();
+  renderData(lastData);
+}
+
+function exportCSV() {
+  const data = getData();
+  if (data.length === 0) { alert('暂无数据可导出'); return; }
+  const headers = ['提交时间','报名期次','学员姓名','性别','年龄','身高','体重','身份证号','家长联系人','联系电话','紧急联系人','疾病史','疾病备注','游泳基础','泳姿','选择课程','时段','场地','报名类型','组团人数','转介绍','代金券','原价','抵扣','实缴','缴费方式','缴费日期','签字','填表日期'];
+  const rows = data.map(d => [
+    d.submitted_at, d.period, d.name, d.gender, d.age, d.height, d.weight, d.id_number,
+    d.parent_contact, d.phone, d.emergency_contact, d.disease, d.disease_note,
+    d.swim_level, d.swim_style,
+    Array.isArray(d.courses) ? d.courses.join(';') : d.courses,
+    Array.isArray(d.time_slots) ? d.time_slots.join(';') : d.time_slots,
+    d.venue, d.reg_type, d.group_size, d.referral, d.voucher,
+    d.original_price, d.discount, d.final_price, d.payment_method, d.payment_date,
+    d.signature, d.fill_date
+  ].map(v => {
+    const s = String(v || '');
+    return s.includes(',') || s.includes('"') || s.includes('\n') ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }).join(','));
+
+  const bom = '\uFEFF';
+  const csv = bom + headers.join(',') + '\n' + rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `游泳报名数据_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportJSON() {
+  const data = getData();
+  if (data.length === 0) { alert('暂无数据可导出'); return; }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `游泳报名数据_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function clearData() {
+  if (!confirm('确定要清空所有报名数据吗？此操作不可恢复！')) return;
+  if (!confirm('再次确认：将删除所有 ${getData().length} 条记录？')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  refreshData();
+}
+
+function showHelp() {
+  const help = `
+📖 数据收集设置教程
+
+方式一：Google Sheets（推荐，免费）
+1. 打开 Google 表格，新建一个空白表格
+2. 点击菜单"扩展程序" → "Apps Script"
+3. 将下方的 Google Apps Script 代码粘贴进去，将 SHEET_ID 改为你的表格 ID
+4. 部署为"网页应用"（执行身份选"任何人"）
+5. 将生成的网址填入上方输入框保存
+
+方式二：本地存储（默认）
+不设置远程端点时，所有数据保存在您浏览器的本地存储中。
+可通过管理后台导出 CSV/JSON 文件备份。
+切换到同一台电脑的同一浏览器即可查看所有数据。
+
+💡 建议两种方式结合使用：设置远程端点 + 定期导出备份。
+  `;
+  alert(help);
+}
+
+// Auto-login check
+document.addEventListener('DOMContentLoaded', () => {
+  if (getCookie('swim_admin') === '1') {
+    showAdmin();
+  }
+});
+</script>
+</body>
+</html>
